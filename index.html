@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log filter</title>
+    <link rel="stylesheet" href="css/bulma.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+</head>
+
+<body>
+    <div class="columns">
+        <div class="column is-three-quarters">
+            <textarea class="textarea" placeholder="paste logs here" rows="30" id="logText"></textarea>
+        </div>
+        <div class="column">
+            <div class="control">
+                <button class="button is-primary" id="filterButton">filter</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var textElement = document.getElementById("logText")
+    document.getElementById("filterButton").addEventListener("click", function () {
+
+        var logContent = textElement.value
+        var lines = logContent.split('at ')
+        var filtered = ""
+        for (var i = 0; i < lines.length; i++) {
+            var l = lines[i]
+
+            if (!l.startsWith("org")
+                && !l.startsWith("com.sun")
+                && !l.startsWith("sun")
+                && !l.startsWith("java")
+                && !l.startsWith("java.lang")
+                && !l.startsWith("oracle")
+                && !l.startsWith("oracle.jdbc")
+                && !l.startsWith("com.successfactors.platform.ui.filter")
+                && !l.startsWith("com.successfactors.security.ui.filter")
+                && !l.startsWith("com.successfactors.perflog")
+                && !l.startsWith("com.successfactors.datareplication")
+                && !l.startsWith("com.successfactors.sca")
+                && !l.includes("RBPPerfLogInterceptor")
+                && !l.includes(".java:1")
+                && !l.includes(".doFilter(")
+                && !l.includes("_$$_javassist_")
+            ) {
+                if (i != 0) {
+                    filtered += "    at "
+                }
+                filtered += l + "\n"
+                continue
+            }
+        }
+        textElement.value = filtered
+    })
+</script>
+
+</html>
